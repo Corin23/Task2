@@ -1,0 +1,185 @@
+Script:
+
+#!/bin/bash
+
+#mirrors array
+
+mirrors=(git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git)
+#attempts=5
+
+#checking if the process is already running
+
+
+
+ping google.com -c1 >> log.txt;
+errorcode=(`echo $?`) #error code 2 = no internet
+
+if test $errorcode -eq 2
+then
+	for i in {1..5} # 5 attempts
+		do
+	echo "No internet connection"
+	sleep 20; #20 seconds delay
+	ping google.com -c1 >> log.txt
+	err2=(`echo $?`)
+	if test $err2 -ne 2 # rechecking connection
+then
+echo "Internet available again"
+break;
+	fi
+		done
+echo "Update failed, check network connection!"
+fi
+
+
+
+if test $errorcode -eq 0
+then
+	echo "You are connected to internet."
+	echo `date` >> logsuccesful.txt
+tput smso
+	echo "Checking for updates:"
+tput rmso
+	sudo apt update>> logsuccesful.txt;
+tput smso
+	echo "Upgrading packages:"
+tput rmso
+	yes | sudo apt upgrade >> logsuccesful.txt;
+tput smso
+	echo "Upgrade finished!"
+tput rmso
+	sudo apt autoremove >> logsuccesful.txt;
+fi
+
+if test $errorcode -eq 0 #mirrors update
+then
+tput smso
+	echo "Updating git mirrorrs: "
+tput rmso
+for i in "${mirrors[@]}";
+do
+git pull $i #>> logmirrorspulled.txt;
+done
+tput smso
+	echo "Mirrors updated!"
+tput rmso
+
+fi
+
+
+
+Checks for connections: 
+--- google.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 24.443/24.443/24.443/0.000 ms
+PING google.com (142.250.187.110) 56(84) bytes of data.
+64 bytes from sof02s44-in-f14.1e100.net (142.250.187.110): icmp_seq=1 ttl=112 time=24.4 ms
+
+
+Updates: 
+
+
+joi 14 iulie 2022, 15:55:33 +0300
+Hit:1 http://mirrors.nav.ro/ubuntu jammy InRelease
+Get:2 http://mirrors.nav.ro/ubuntu jammy-updates InRelease [114 kB]
+Get:3 http://mirrors.nav.ro/ubuntu jammy-backports InRelease [99,8 kB]
+Hit:4 http://packages.microsoft.com/repos/code stable InRelease
+Get:5 http://mirrors.nav.ro/ubuntu jammy-security InRelease [110 kB]
+Get:6 http://mirrors.nav.ro/ubuntu jammy-updates/main i386 Packages [166 kB]
+Get:7 http://mirrors.nav.ro/ubuntu jammy-updates/main amd64 Packages [371 kB]
+Get:8 http://mirrors.nav.ro/ubuntu jammy-updates/main amd64 DEP-11 Metadata [90,7 kB]
+Get:9 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 Packages [166 kB]
+Get:10 http://mirrors.nav.ro/ubuntu jammy-updates/universe i386 Packages [81,2 kB]
+Get:11 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 DEP-11 Metadata [95,2 kB]
+Get:12 http://mirrors.nav.ro/ubuntu jammy-updates/multiverse amd64 DEP-11 Metadata [940 B]
+Get:13 http://mirrors.nav.ro/ubuntu jammy-backports/universe amd64 DEP-11 Metadata [12,5 kB]
+Get:14 http://mirrors.nav.ro/ubuntu jammy-security/main amd64 DEP-11 Metadata [11,4 kB]
+Get:15 http://mirrors.nav.ro/ubuntu jammy-security/universe amd64 DEP-11 Metadata [608 B]
+Fetched 1.319 kB in 4s (313 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+10 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following packages will be upgraded:
+  gjs libgjs0g libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5
+  libqt5printsupport5 libqt5widgets5 libqt5xml5 qt5-gtk-platformtheme
+10 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 10,2 MB of archives.
+After this operation, 0 B of additional disk space will be used.
+Do you want to continue? [Y/n] Get:1 http://mirrors.nav.ro/ubuntu jammy-updates/main amd64 gjs amd64 1.72.0-3~ubuntu22.04.2 [105 kB]
+Get:2 http://mirrors.nav.ro/ubuntu jammy-updates/main amd64 libgjs0g amd64 1.72.0-3~ubuntu22.04.2 [401 kB]
+Get:3 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5core5a amd64 5.15.3+dfsg-2ubuntu0.1 [2.004 kB]
+Get:4 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5dbus5 amd64 5.15.3+dfsg-2ubuntu0.1 [222 kB]
+Get:5 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5network5 amd64 5.15.3+dfsg-2ubuntu0.1 [730 kB]
+Get:6 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5gui5 amd64 5.15.3+dfsg-2ubuntu0.1 [3.722 kB]
+Get:7 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5widgets5 amd64 5.15.3+dfsg-2ubuntu0.1 [2.561 kB]
+Get:8 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5printsupport5 amd64 5.15.3+dfsg-2ubuntu0.1 [215 kB]
+Get:9 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 libqt5xml5 amd64 5.15.3+dfsg-2ubuntu0.1 [124 kB]
+Get:10 http://mirrors.nav.ro/ubuntu jammy-updates/universe amd64 qt5-gtk-platformtheme amd64 5.15.3+dfsg-2ubuntu0.1 [130 kB]
+Fetched 10,2 MB in 6s (1.674 kB/s)
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 286889 files and directories currently installed.)
+Preparing to unpack .../0-gjs_1.72.0-3~ubuntu22.04.2_amd64.deb ...
+Unpacking gjs (1.72.0-3~ubuntu22.04.2) over (1.72.0-3~ubuntu22.04.1) ...
+Preparing to unpack .../1-libgjs0g_1.72.0-3~ubuntu22.04.2_amd64.deb ...
+Unpacking libgjs0g:amd64 (1.72.0-3~ubuntu22.04.2) over (1.72.0-3~ubuntu22.04.1) ...
+Preparing to unpack .../2-libqt5core5a_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5core5a:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../3-libqt5dbus5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5dbus5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../4-libqt5network5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5network5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../5-libqt5gui5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5gui5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../6-libqt5widgets5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5widgets5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../7-libqt5printsupport5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5printsupport5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../8-libqt5xml5_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking libqt5xml5:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Preparing to unpack .../9-qt5-gtk-platformtheme_5.15.3+dfsg-2ubuntu0.1_amd64.deb ...
+Unpacking qt5-gtk-platformtheme:amd64 (5.15.3+dfsg-2ubuntu0.1) over (5.15.3+dfsg-2) ...
+Setting up libgjs0g:amd64 (1.72.0-3~ubuntu22.04.2) ...
+Setting up gjs (1.72.0-3~ubuntu22.04.2) ...
+Setting up libqt5core5a:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5dbus5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5network5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5xml5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5gui5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5widgets5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up qt5-gtk-platformtheme:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Setting up libqt5printsupport5:amd64 (5.15.3+dfsg-2ubuntu0.1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3) ...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+
+crontab schedule:
+00 01 * * * /home/corin/Desktop/Task2/myupdater.sh
+
