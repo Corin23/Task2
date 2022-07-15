@@ -21,7 +21,7 @@ errorcode=(`echo $?`)
 
 function mirrorsupdate(){
 for i in "${mirrors[@]}"; do
-sudo git pull $i;
+sudo git pull $i &;
 done
 echo "Mirrors updated!"
 }
@@ -75,8 +75,16 @@ errorcode=`echo $?`
 
 mirrorsupdate()
 {
+<<<<<<< HEAD
 echo "$mirrors" | tr ',' '\n' | while read i; do
 sudo git pull $i &
+=======
+#for i in "${mirrors[@]}"; do
+#sudo git pull $i &;
+#done
+echo "$mirrors" | tr ' ' '\n' | while read i; do
+sudo git pull $i
+>>>>>>> 85afbc19f6c2682e22dff41f6c9499915e2c7826
 done
 echo "Mirrors updated!"
 }
