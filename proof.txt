@@ -58,7 +58,7 @@ fi
 
 commandslist="sudo apt update,sudo apt upgrade -y,sudo apt autoremove"
 mirrors="git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git,git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
-
+i=1
 ubuntupdate()
 {
 echo "$commandslist" | tr ',' '\n' | while read i; do
@@ -75,16 +75,8 @@ errorcode=`echo $?`
 
 mirrorsupdate()
 {
-<<<<<<< HEAD
 echo "$mirrors" | tr ',' '\n' | while read i; do
 sudo git pull $i &
-=======
-#for i in "${mirrors[@]}"; do
-#sudo git pull $i &;
-#done
-echo "$mirrors" | tr ' ' '\n' | while read i; do
-sudo git pull $i
->>>>>>> 85afbc19f6c2682e22dff41f6c9499915e2c7826
 done
 echo "Mirrors updated!"
 }
@@ -94,17 +86,18 @@ networkcheck
 
 if test $errorcode -eq 2
 then
-	for i in {1..5} # 5 attempts
+	while [ "$i" -le 5 ] # 5 attempts
 	do
 	echo "No internet connectin"
 	sleep 20; #20 seconds delay
 	networkcheck
-	if test $errorcode -ne 2 # rechecking connection
+	if test $errorcode -eq 0 # rechecking connection
 	then
 	echo "Internet available again"
 	ubuntupdate
 	break;
 	fi
+	i=$((i+1))
 	done
 echo "Update failed, check network connection!"
 fi
@@ -115,6 +108,8 @@ then
 ubuntupdate #updates ubuntu
 mirrorsupdate #updates mirrors
 fi
+
+
 
 
 
