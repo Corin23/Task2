@@ -1,57 +1,31 @@
-Script:
-
-
 #!/bin/sh
 
-
+dir="$(pwd)"
 commandslist="sudo apt update,sudo apt upgrade -y,sudo apt autoremove"
 mirrors="git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git,git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
 i=1
-ubuntupdate()
-{
-echo "$commandslist" | tr ',' '\n' | while read i;
-	 do
-		$(echo $i);
-	done
-echo "Ubuntu updated successfuly!"
-}
 
 networkcheck()
 {
-ping google.com -c1 >> log.txt;
-errorcode=$(echo $?)
+	ping google.com -c1 >> log.txt;
+	errorcode=$(echo $?)
 }
 
-mirrorsupdate()
+update()
 {
-echo "$mirrors" | tr ',' '\n' | while read i;
-	 do
-		sudo git pull $i &
-	done
-echo "Mirrors updated!"
-}
 
-networkcheck
-
-if test $errorcode -eq 2
-then
-	while [ "$i" -le 5 ] # 5 attempts
-		do
-			echo "No internet connectin"
-			sleep 20; #20 seconds delay
-			networkcheck
-				if test $errorcode -eq 0 # rechecking connection
-				then
-					echo "Internet available again"
-					ubuntupdate
-					break;
-				fi
-			i=$((i+1))
+	echo "$commandslist" | tr ',' '\n' | while read i;
+		 do
+			$(echo $i);
 		done
-echo "Update failed, check network connection!"
-fi
+
+	echo "$mirrors" | tr ',' '\n' | while read i;
+		do
+ 			test ["$(ls -A $dir)"] && $(git pull $i &) || $(git clone $i && git pull $i &)
+		done
 
 
+<<<<<<< HEAD
 if test $errorcode -eq 0
 then
 	ubuntupdate #updates ubuntu
@@ -59,6 +33,23 @@ then
 fi
 
 
+=======
+}
+
+
+while [ $i -le 5 ]
+do
+	networkcheck
+	if test $errorcode -eq 0
+		then
+			update
+			break;
+	else
+		echo "No internet connection, try again!"
+	fi
+		sleep 20
+done
+>>>>>>> 559c1b5 (commit)
 
 
 Checks for connections: 
