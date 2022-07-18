@@ -1,7 +1,6 @@
-
 #!/bin/bash
 
-dir="$(pwd)"
+directory_check=$(ls -A $(pwd) | wc -l)
 commandslist=('sudo apt update' 'sudo apt upgrade -y' 'sudo apt autoremove')
 mirrors=('git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' 'git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git')
 cmd_connectivity="ping google.com -c1 &> /dev/null"
@@ -17,21 +16,21 @@ update_ubuntu(){
 
 update_mirrors(){
 	for i in "${mirrors[@]}"; do
-		if [ "$(ls -A $dir)" ]; then
+		if [ $directory_check -gt 0 ]; then
 			echo "$dir is not empty"
 			git init
 			git pull $i
 			status=$?
 			echo "The mirror update command ended with status $status at $(date)" >> log.txt
-			break
 
-		fi
-	echo "$dir is empty"
-		git init
-		git clone $i
-		git pull $i
-		status=$?
+		else
+			echo "$dir is empty"
+			git init
+			git clone $i
+			git pull $i
+			status=$?
 		echo "The mirror clone and update commands ended with status $status at $(date)" >> log.txt
+		fi
 	done
 }
 
@@ -64,7 +63,7 @@ check_single_instance(){
 	done
 }
 check_statuses(){
-	cat log.txt
+	cat log.txt | tail -6
 }
 
 check_connectivity
@@ -75,13 +74,12 @@ check_statuses
 
 corin@otp-cdobrica-l1:~/Desktop/Task2test$ ./myupdater.sh 
 Connectivity OK
-[sudo] password for corin: 
 Hit:1 http://mirrors.nav.ro/ubuntu jammy InRelease
 Hit:2 http://mirrors.nav.ro/ubuntu jammy-updates InRelease
 Hit:3 http://mirrors.nav.ro/ubuntu jammy-backports InRelease
 Hit:4 http://mirrors.nav.ro/ubuntu jammy-security InRelease
 Hit:5 http://packages.microsoft.com/repos/code stable InRelease
-Reading package lists... Done                           
+Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 All packages are up to date.
@@ -94,16 +92,22 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-/home/corin/Desktop/Task2test is not empty
+ is not empty
 Reinitialized existing Git repository in /home/corin/Desktop/Task2test/.git/
 From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
  * branch                      HEAD       -> FETCH_HEAD
 Already up to date.
-Network check command ended with status 0 at luni 18 iulie 2022, 16:37:10 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 16:37:18 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 16:37:19 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 16:37:19 +0300
-The mirror update command ended with status 0 at luni 18 iulie 2022, 16:37:20 +0300
+ is not empty
+Reinitialized existing Git repository in /home/corin/Desktop/Task2test/.git/
+From git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux
+ * branch                      HEAD       -> FETCH_HEAD
+Already up to date.
+Network check command ended with status 0 at luni 18 iulie 2022, 17:07:25 +0300
+The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:27 +0300
+The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:27 +0300
+The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:28 +0300
+The mirror update command ended with status 0 at luni 18 iulie 2022, 17:07:29 +0300
+The mirror update command ended with status 0 at luni 18 iulie 2022, 17:07:29 +0300
 
 
 crontab schedule:
