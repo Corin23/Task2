@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 dir="$(pwd)"
@@ -71,7 +72,6 @@ check_single_instance
 update_ubuntu
 update_mirrors
 check_statuses
-
 
 corin@otp-cdobrica-l1:~/Desktop/Task2test$ ./myupdater.sh 
 Connectivity OK
