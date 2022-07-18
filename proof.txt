@@ -25,18 +25,6 @@ update()
 		done
 
 
-<<<<<<< HEAD
-if test $errorcode -eq 0
-then
-	ubuntupdate #updates ubuntu
-	mirrorsupdate #updates mirrors
-fi
-
-
-=======
-}
-
-
 while [ $i -le 5 ]
 do
 	networkcheck
