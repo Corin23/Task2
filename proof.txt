@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directory_check=$(ls -A $(pwd) | wc -l)
+directory_check=$(ls -lah $(pwd) | grep ^d  | wc -l)
 commandslist=('sudo apt update' 'sudo apt upgrade -y' 'sudo apt autoremove')
 mirrors=('git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' 'git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git')
 cmd_connectivity="ping google.com -c1 &> /dev/null"
@@ -74,6 +74,7 @@ check_statuses
 
 corin@otp-cdobrica-l1:~/Desktop/Task2test$ ./myupdater.sh 
 Connectivity OK
+[sudo] password for corin: 
 Hit:1 http://mirrors.nav.ro/ubuntu jammy InRelease
 Hit:2 http://mirrors.nav.ro/ubuntu jammy-updates InRelease
 Hit:3 http://mirrors.nav.ro/ubuntu jammy-backports InRelease
@@ -94,21 +95,33 @@ Reading state information... Done
 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
  is not empty
 Reinitialized existing Git repository in /home/corin/Desktop/Task2test/.git/
+remote: Enumerating objects: 66, done.
+remote: Counting objects: 100% (54/54), done.
+remote: Compressing objects: 100% (13/13), done.
+remote: Total 30 (delta 25), reused 21 (delta 17), pack-reused 0
+Unpacking objects: 100% (30/30), 5.29 KiB | 142.00 KiB/s, done.
 From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
  * branch                      HEAD       -> FETCH_HEAD
-Already up to date.
+Updating ff6992735ade..ca85855bdcae
+Fast-forward
+ drivers/gpio/gpiolib-cdev.c             |  4 ++++
+ drivers/infiniband/hw/irdma/cm.c        | 50 --------------------------------------------------
+ drivers/infiniband/hw/irdma/i40iw_hw.c  |  1 +
+ drivers/infiniband/hw/irdma/icrdma_hw.c |  1 +
+ drivers/infiniband/hw/irdma/irdma.h     |  1 +
+ drivers/infiniband/hw/irdma/verbs.c     |  4 ++--
+ 6 files changed, 9 insertions(+), 52 deletions(-)
  is not empty
 Reinitialized existing Git repository in /home/corin/Desktop/Task2test/.git/
 From git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux
  * branch                      HEAD       -> FETCH_HEAD
 Already up to date.
-Network check command ended with status 0 at luni 18 iulie 2022, 17:07:25 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:27 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:27 +0300
-The ubuntu update command ended with status 0 at luni 18 iulie 2022, 17:07:28 +0300
-The mirror update command ended with status 0 at luni 18 iulie 2022, 17:07:29 +0300
-The mirror update command ended with status 0 at luni 18 iulie 2022, 17:07:29 +0300
-
+Network check command ended with status 0 at marți 19 iulie 2022, 10:04:40 +0300
+The ubuntu update command ended with status 0 at marți 19 iulie 2022, 10:04:46 +0300
+The ubuntu update command ended with status 0 at marți 19 iulie 2022, 10:04:47 +0300
+The ubuntu update command ended with status 0 at marți 19 iulie 2022, 10:04:47 +0300
+The mirror update command ended with status 0 at marți 19 iulie 2022, 10:04:51 +0300
+The mirror update command ended with status 0 at marți 19 iulie 2022, 10:04:52 +0300
 
 crontab schedule:
 00 01 * * * /home/corin/Desktop/Task2/myupdater.sh
